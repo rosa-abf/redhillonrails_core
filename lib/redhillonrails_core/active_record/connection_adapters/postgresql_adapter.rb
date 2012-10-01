@@ -63,8 +63,8 @@ module RedhillonrailsCore
             SQL
 
             column_names = columns.values_at(*index_keys).compact
-            if md = expression.try(:match, /^lower\(\(?([^)]+)\)?(::text)?\)$/i)
-              column_names << md[1]
+            if md = expression.try(:scan, /lower\(\(?([^)]+)\)?(::text)?\)/i)
+              md.each{ |a| column_names << a[0] }
             end
             index = ::ActiveRecord::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names)
             index.conditions = conditions
